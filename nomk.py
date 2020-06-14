@@ -36,10 +36,8 @@ roman_figures = [['XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI'],
                  ['XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII'], 
                  ['VII', 'VIII', 'IX', 'X', 'XI', 'XII'],
                  ['I', 'II', 'III', 'IV', 'V', 'VI']]
-ru_letters_n = [['В', 'Г'],
+ru_letters = [['В', 'Г'],
               ['А', 'Б']]
-ru_letters_s = [x for x in reversed(ru_letters_n)]
-
 ru_letters_lower = [['в', 'г'],
                     ['а', 'б']]              
 ru_letters_small = [['ж', 'з', 'и'],
@@ -127,7 +125,6 @@ def coordsTo500k(x, y):
     col, row, min_x, min_y = get1M(x, abs_y)
     letter = ''
 
-    # TODO: Fix for south
     # TODO: Add quad sheets
 
     if abs_y > 60.0: # Create double sheets
@@ -141,13 +138,10 @@ def coordsTo500k(x, y):
         pos_x = int(math.floor(abs(x - min_x) / 3.0))
         pos_y = int(math.floor((abs_y - min_y) / 2.0))
         
-        if y > 0:
-            ru_letters = ru_letters_n
-        else:
-            ru_letters = ru_letters_s
-        
-        ru_letters[pos_y][pos_x]
-        
+        # TODO: Fix for south
+        if y < 0: pos_y = abs(1 - pos_y)
+        letter = ru_letters[pos_y][pos_x]
+
         min_x = min_x + pos_x * 3.0
         min_y = min_y + pos_y * 2.0
 
@@ -171,6 +165,7 @@ def coordsTo200k(x, y):
     col_200k = int(math.floor(abs(x - min_x) / size_x))
 
     # TODO: Fix for south
+    if y < 0: row_200k = abs(5 - row_200k)
 
     if abs_y > 76.0: # Create triple sheets
         begin_col = math.floor(col_200k / 3) * 3
@@ -225,13 +220,15 @@ def get_grid_pos(x, y, min_x, min_y, parts):
 
 def coordsTo100k(x, y, simple=False):
 
-    # TODO: Fix for south
     # TODO: Add double and quad sheets - ru: Севернее 60° с.ш. и южнее 60° ю.ш. карты сдвоены, севернее 76° с.ш. и южнее 76° ю.ш. счетверены.
 
     abs_y = abs(y)
     col, row, min_x, min_y = get1M(x, abs_y)
 
     row_100k, col_100k, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 12)
+    
+    # TODO: Fix for south
+    if y < 0: row_100k = abs(1 - row_100k)
 
     letter = (11 - row_100k) * 12 + col_100k + 1
 
@@ -246,15 +243,13 @@ def coordsTo50k(x, y):
     # TODO: Add double and quad sheets - ru: Севернее 60° с.ш. и южнее 60° ю.ш. карты сдвоены, севернее 76° с.ш. и южнее 76° ю.ш. счетверены.
 
     abs_y = abs(y)
-    nomk, min_x, max_x, min_y, max_y = coordsTo100k(x, abs_y)
+    nomk, min_x, max_x, min_y, max_y = coordsTo100k(x, y)
 
     row, col, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 24)
     
-    if y > 0:
-        ru_letters = ru_letters_n
-    else:
-        ru_letters = ru_letters_s
-    
+    # TODO: Fix for south
+    if y < 0: row = abs(1 - row)
+        
     letter = ru_letters[row][col]
 
     if y < 0:
@@ -269,7 +264,7 @@ def coordsTo25k(x, y):
     abs_y = abs(y)
     nomk, min_x, max_x, min_y, max_y = coordsTo50k(x, abs_y)
     row, col, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 48)
-        
+
     letter = ru_letters_lower[row][col]
 
     if y < 0:
@@ -317,7 +312,7 @@ def coordsTo2k(x, y):
     abs_y = abs(y)
     nomk, min_x, max_x, min_y, max_y = coordsTo5k(x, abs_y, True)
     row, col, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 576)
-    
+
     letter = ru_letters_small[row][col]
 
     if y < 0:
