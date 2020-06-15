@@ -125,7 +125,6 @@ def coordsTo500k(x, y):
     col, row, min_x, min_y = get1M(x, abs_y)
     letter = ''
 
-    # TODO: Fix for south
     # TODO: Add quad sheets
 
     if abs_y > 60.0: # Create double sheets
@@ -138,6 +137,9 @@ def coordsTo500k(x, y):
     else:
         pos_x = int(math.floor(abs(x - min_x) / 3.0))
         pos_y = int(math.floor((abs_y - min_y) / 2.0))
+        
+        # TODO: Fix for south
+        if y < 0: pos_y = abs(1 - pos_y)
         letter = ru_letters[pos_y][pos_x]
 
         min_x = min_x + pos_x * 3.0
@@ -163,6 +165,7 @@ def coordsTo200k(x, y):
     col_200k = int(math.floor(abs(x - min_x) / size_x))
 
     # TODO: Fix for south
+    if y < 0: row_200k = abs(5 - row_200k)
 
     if abs_y > 76.0: # Create triple sheets
         begin_col = math.floor(col_200k / 3) * 3
@@ -217,13 +220,15 @@ def get_grid_pos(x, y, min_x, min_y, parts):
 
 def coordsTo100k(x, y, simple=False):
 
-    # TODO: Fix for south
     # TODO: Add double and quad sheets - ru: Севернее 60° с.ш. и южнее 60° ю.ш. карты сдвоены, севернее 76° с.ш. и южнее 76° ю.ш. счетверены.
 
     abs_y = abs(y)
     col, row, min_x, min_y = get1M(x, abs_y)
 
     row_100k, col_100k, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 12)
+    
+    # TODO: Fix for south
+    if y < 0: row_100k = abs(1 - row_100k)
 
     letter = (11 - row_100k) * 12 + col_100k + 1
 
@@ -238,10 +243,13 @@ def coordsTo50k(x, y):
     # TODO: Add double and quad sheets - ru: Севернее 60° с.ш. и южнее 60° ю.ш. карты сдвоены, севернее 76° с.ш. и южнее 76° ю.ш. счетверены.
 
     abs_y = abs(y)
-    nomk, min_x, max_x, min_y, max_y = coordsTo100k(x, abs_y)
+    nomk, min_x, max_x, min_y, max_y = coordsTo100k(x, y)
 
     row, col, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 24)
-
+    
+    # TODO: Fix for south
+    if y < 0: row = abs(1 - row)
+        
     letter = ru_letters[row][col]
 
     if y < 0:
@@ -314,7 +322,7 @@ def coordsTo2k(x, y):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Transform coordinates to nomenclature and vice versa')
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 0.1')
-    parser.add_argument('-c', '--coord2nomk', help='Transform coordinates (longtitude latitude) to nomenclature.', type=float, nargs=2, metavar=('X', 'Y'))
+    parser.add_argument('-c', '--coord2nomk', required='True', help='Transform coordinates (longtitude latitude) to nomenclature.', type=float, nargs=2, metavar=('X', 'Y'))
     parser.add_argument('-n', '--nomk2coord', help='Transform nomenclature to coordinates', dest='nomk')
 
     args = parser.parse_args()
@@ -326,23 +334,41 @@ if __name__ == "__main__":
 
     if X is not None and Y is not None:
         if X > 180.0 or X < -180.0 or Y > 90.0 or Y < -90.0:
-            exit('Coordintates out of bounds')
+            exit('Coordinates are out of bounds')
+        
+        #1 : 1 000 000
         nomk, min_x, max_x, min_y, max_y = coordsTo1m(X, Y)
         print('1 : 1 000 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 500 000
         nomk, min_x, max_x, min_y, max_y = coordsTo500k(X, Y)
         print('1 : 500 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 200 000
         nomk, min_x, max_x, min_y, max_y = coordsTo200k(X, Y)
         print('1 : 200 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 100 000
         nomk, min_x, max_x, min_y, max_y = coordsTo100k(X, Y)
         print('1 : 100 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 50 000
         nomk, min_x, max_x, min_y, max_y = coordsTo50k(X, Y)
         print('1 : 50 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 25 000
         nomk, min_x, max_x, min_y, max_y = coordsTo25k(X, Y)
         print('1 : 25 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 10 000
         nomk, min_x, max_x, min_y, max_y = coordsTo10k(X, Y)
         print('1 : 10 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 5 000
         nomk, min_x, max_x, min_y, max_y = coordsTo5k(X, Y)
         print('1 : 5 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        
+        #1 : 2 000
         nomk, min_x, max_x, min_y, max_y = coordsTo2k(X, Y)
         print('1 : 2 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
 
