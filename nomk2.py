@@ -159,15 +159,15 @@ class Nomk200k(Nomk1m):
 
 
 class Nomk100k(Nomk1m):
-	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}$'	
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}$'
 
 	def __init__(self, row, cols, parts_1m):
 		super().__init__(row, cols)
 
 		self._sheet_size['100k'] = (6.0 / 12, 4.0 / 12)
 
-		self._all_parts['1m'] = [list(map(str, range(row * 12 + 1, row * 12 + 12 + 1))) for row in range(12)]
-		self._requested_parts['1m'] = parts_1m.split(',')
+		self._all_parts['1m'] = [list(range(row * 12 + 1, row * 12 + 12 + 1)) for row in range(12)]
+		self._requested_parts['1m'] = map(int, parts_1m.split(','))
 
 	@classmethod
 	def construct(cls, nomk):
@@ -216,7 +216,7 @@ class Nomk25k(Nomk50k):
 
 
 class Nomk10k(Nomk25k):
-	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}-[А-Г](,[А-Г]){0,2}-[а-г](,[а-г]){0,2}-[1-4](,[1-4]){0,2}$'
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}-[А-Г](,[А-Г]){0,2}-[а-г](,[а-г]){0,2}-[1-4]$'
 	
 	def __init__(self, row, cols, parts_1m, parts_100k, parts_50k, parts_25k):
 		super().__init__(row, cols, parts_1m, parts_100k, parts_50k)
@@ -233,8 +233,58 @@ class Nomk10k(Nomk25k):
 		return cls(row, cols, parts_1m, parts_100k, parts_50k, parts_25k)
 
 
+class Nomk5k(Nomk100k):
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}\(\d{1,3}\)$'
+	
+	def __init__(self, row, cols, parts_1m, parts_100k):
+		super().__init__(row, cols, parts_1m)
+
+		self._sheet_size['5k'] = (6.0 / 12 / 16, 4.0 / 12 / 16)
+
+		self._all_parts['100k'] = [list(range(row * 16 + 1, row * 16 + 16 + 1)) for row in range(16)]
+
+		self._requested_parts['100k'] =  map(int, parts_100k.split(','))
+
+	@classmethod
+	def construct(cls, nomk):
+		# N-37-87(70)
+		row, cols, parts_1m_and_parts_100k = nomk.split('-')
+		parts_1m = parts_1m_and_parts_100k.split('(')[0] 
+		parts_100k = parts_1m_and_parts_100k.split('(')[1].split(')')[0]
+		return cls(row, cols, parts_1m, parts_100k)
+
+
+class Nomk2k(Nomk5k):
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}\(\d{1,3}-[а-и]\)$'
+	
+	def __init__(self, row, cols, parts_1m, parts_100k, parts_5k):
+		super().__init__(row, cols, parts_1m, parts_100k)
+
+		self._all_parts['5k'] = (
+			('а', 'б', 'в'),
+			('г', 'д', 'е'),
+			('ж', 'з', 'и'),
+		)
+
+		self._requested_parts['5k'] =  parts_5k.split(',')
+
+	@classmethod
+	def construct(cls, nomk):
+		# N-37-87(70-и)
+		row, cols, parts_1m_and_parts_100k, parts_5k_muddy = nomk.split('-')
+		parts_1m, parts_100k= parts_1m_and_parts_100k.split('(')
+		parts_5k = parts_5k_muddy.strip(')')
+		return cls(row, cols, parts_1m, parts_100k, parts_5k)
+
+
 def get_nomk(nomk):
-	for nomk_class in [Nomk1m, Nomk500k, Nomk200k, Nomk100k, Nomk50k, Nomk25k, Nomk10k]:
+	''' Get nomk class by nomk string
+		Example:
+            from nomk2 import get_nomk
+            nomk = get_nomk('O-37-050')
+            print(nomk.get_bbox_as_wkt())
+	'''
+	for nomk_class in [Nomk1m, Nomk500k, Nomk200k, Nomk100k, Nomk50k, Nomk25k, Nomk10k, Nomk5k, Nomk2k]:
 		if re.match(nomk_class.reg_exp, nomk):
 			return nomk_class.construct(nomk)
 
@@ -246,9 +296,11 @@ if __name__ == '__main__':
 		Nomk500k: ['N-37-А', 'N-36-А', 'R-39-А,Б'],
 		Nomk200k: ['N-37-I', 'N-36-XV', 'U-40-XXXI,XXXII,XXXIII'],
 		Nomk100k: ['N-37-1', 'N-36-23', 'N-37-56'],
-		Nomk50k: ['N-37-56-А'],
+		Nomk50k: ['N-37-56-А', 'N-37-134-А'],
 		Nomk25k: ['N-37-56-А-г'],
 		Nomk10k: ['N-37-56-А-г-1', 'N-37-56-А-г-3'],
+		Nomk5k: ['N-37-87(70)'],
+		Nomk2k: ['N-37-87(70-и)'],
 	}
 	
 	for nomk_class, scale_samples in samples.items(): 
