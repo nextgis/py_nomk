@@ -137,20 +137,23 @@ class Nomk500k(Nomk1m):
 
 
 class Nomk200k(Nomk1m):
-	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-[XIV]{1,5}$'
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d\d$'
+	# reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-[XIV]{1,5}$'
 
 	def __init__(self, row, cols, parts_1m):
 		super().__init__(row, cols)
 
-		self._all_parts['1m'] = (
-			('I', 'II', 'III', 'IV', 'V', 'VI'),
-			('VII', 'VIII', 'IX', 'X', 'XI', 'XII'),
-			('XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII'),
-			('XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV'),
-			('XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX'),
-			('XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI'),
-		)
-		self._requested_parts['1m'] = parts_1m.split(',')
+		# self._all_parts['1m'] = (
+		# 	('I', 'II', 'III', 'IV', 'V', 'VI'),
+		# 	('VII', 'VIII', 'IX', 'X', 'XI', 'XII'),
+		# 	('XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII'),
+		# 	('XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV'),
+		# 	('XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX'),
+		# 	('XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI'),
+		# )
+		self._all_parts['1m'] = [list(range(row * 6 + 1, row * 6 + 6 + 1)) for row in range(6)]
+
+		self._requested_parts['1m'] = map(int, parts_1m.split(','))
 
 	@classmethod
 	def construct(cls, nomk):
@@ -159,7 +162,7 @@ class Nomk200k(Nomk1m):
 
 
 class Nomk100k(Nomk1m):
-	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d{1,3}$'
+	reg_exp = r'^[A-V]-\d{1,2}(,\d{1,2})*-\d\d\d$'
 
 	def __init__(self, row, cols, parts_1m):
 		super().__init__(row, cols)
@@ -294,8 +297,8 @@ if __name__ == '__main__':
 	samples = {
 		Nomk1m: ['N-37', 'O-38', 'U-37,38,39,40'],
 		Nomk500k: ['N-37-А', 'N-36-А', 'R-39-А,Б'],
-		Nomk200k: ['N-37-I', 'N-36-XV', 'U-40-XXXI,XXXII,XXXIII'],
-		Nomk100k: ['N-37-1', 'N-36-23', 'N-37-56'],
+		Nomk200k: ['N-37-01', 'N-36-15', 'U-40-31,32,33'],
+		Nomk100k: ['N-37-001', 'N-36-023', 'N-37-056'],
 		Nomk50k: ['N-37-56-А', 'N-37-134-А'],
 		Nomk25k: ['N-37-56-А-г'],
 		Nomk10k: ['N-37-56-А-г-1', 'N-37-56-А-г-3'],
