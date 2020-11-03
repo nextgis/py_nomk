@@ -226,8 +226,8 @@ def test_2k():
 
     nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_2k(37.61556, 55.75222)
     scale, min_x2, max_x2, min_y2, max_y2 = text.text_to_2k(letter, zone, number2, last_number, last_letter, is_south)
-    print(u'{} - {},{},{},{}'.format(nomk_str, min_x1, max_x1, min_y1, max_y1))
-    print(u'{} - {},{},{},{}'.format(scale, min_x2, max_x2, min_y2, max_y2))
+    # print(u'{} - {},{},{},{}'.format(nomk_str, min_x1, max_x1, min_y1, max_y1))
+    # print(u'{} - {},{},{},{}'.format(scale, min_x2, max_x2, min_y2, max_y2))
     
     assert abs(min_x1 - min_x2) < delta
     assert abs(max_x1 - max_x2) < delta
