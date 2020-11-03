@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -168,3 +168,61 @@ def text_to_10k(letter, number, number2, letter2, last_letter, last_number, is_s
     # Get bbox by some point in sheet [0.0625 x 0.04133]
     nomk, min_x, max_x, min_y, max_y = coord.coords_to_10k(min_x + 0.0313, (min_y + 0.0208) * mult)
     return '10k', min_x, max_x, min_y, max_y
+
+def text_to_5k(letter, number, number2, last_number, is_south):
+    col, row = util.get_pos_num(number2, is_south)
+
+    min_x = 6.0 * (number - 31)
+    min_x += 0.5 * col
+
+    min_y = 4.0 * util.letters.index(letter)
+    min_y += 4.0 / 12 * row
+
+    col_5k, row_5k = util.get_pos_num2(last_number, is_south)
+
+    size_x = 6.0 / 192
+    size_y = 4.0 / 192
+
+    min_x += size_x * col_5k
+    min_y += size_y * row_5k
+
+    mult = 1
+    if is_south:
+        mult = -1
+
+    # Get bbox by some point in sheet [0.0625 x 0.04133]
+    nomk, min_x, max_x, min_y, max_y = coord.coords_to_5k(min_x + size_x / 2, (min_y + size_y / 2) * mult)
+    return '5k', min_x, max_x, min_y, max_y
+
+def text_to_2k(letter, number, number2, last_number, last_letter, is_south):
+    col, row = util.get_pos_num(number2, is_south)
+
+    min_x = 6.0 * (number - 31)
+    min_x += 0.5 * col
+
+    min_y = 4.0 * util.letters.index(letter)
+    min_y += 4.0 / 12 * row
+
+    col_5k, row_5k = util.get_pos_num2(last_number, is_south)
+
+    size_x = 6.0 / 192
+    size_y = 4.0 / 192
+
+    min_x += size_x * col_5k
+    min_y += size_y * row_5k
+
+    size_x_2k = size_x / 3
+    size_y_2k = size_y / 3
+
+    col_2k, row_2k = util.get_pos_ru_small(last_letter, is_south)
+
+    min_x += size_x_2k * col_2k
+    min_y += size_y_2k * row_2k
+
+    mult = 1
+    if is_south:
+        mult = -1
+
+    # Get bbox by some point in sheet [0.0625 x 0.04133]
+    nomk, min_x, max_x, min_y, max_y = coord.coords_to_2k(min_x + size_x_2k / 2, (min_y + size_y_2k / 2) * mult)
+    return '2k', min_x, max_x, min_y, max_y

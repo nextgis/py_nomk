@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -222,7 +222,6 @@ def coords_to_50k_simple(x, y):
     letter_str = util.get_letter_ru(col_50k, row_50k, y < 0)
     return letter, number, last_number, letter_str, min_x_50k, min_y_50k * mult
 
-
 def coords_to_25k_simple(x, y):
     mult = 1
     if y < 0:
@@ -235,12 +234,28 @@ def coords_to_25k_simple(x, y):
 
     pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
 
-    col_str = ''
     min_x = min_x_25k
     max_x = max_x_25k
 
     letter_str = util.get_letter_ru(col_25k, row_25k, y < 0).lower()
     return letter, number, last_number, last_letter, letter_str, min_x_25k, min_y_25k * mult
+
+def coords_to_5k_simple(x, y):
+    mult = 1
+    if y < 0:
+        mult = -1
+
+    abs_y = abs(y)
+    
+    letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
+    row_5k, col_5k, size_x_5k, size_y_5k, min_x_5k, max_x_5k, min_y_5k, max_y_5k = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
+
+    min_x = min_x_5k
+    max_x = max_x_5k
+    
+    letter_str = util.get_letter_num2(col_5k, row_5k, y < 0)
+
+    return letter, number, last_number, letter_str, min_x_5k, min_y_5k * mult
 
 def coords_to_100k(x, y):
     mult = 1
@@ -405,3 +420,77 @@ def coords_to_10k(x, y):
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_10k * mult, max_y_10k * mult
+
+
+def coords_to_5k(x, y):
+    mult = 1
+    if y < 0:
+        mult = -1
+
+    abs_y = abs(y)
+    letter_str = ''
+    letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
+    row_5k, col_5k, size_x_5k, size_y_5k, min_x_5k, max_x_5k, min_y_5k, max_y_5k = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
+
+    if abs_y > 88.0:
+        raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
+    elif abs_y > 76.0: # Create quad sheets
+        begin_col = math.floor(col_5k / 4) * 4
+        min_x = min_x + begin_col
+        max_x = min_x
+        for i in range(4):
+            if letter_str == '':
+                letter_str = '({:03d}'.format(util.get_letter_num2(begin_col + i, row_5k, y < 0))
+            else: 
+                letter_str = letter_str + ',{:03d}'.format(util.get_letter_num2(begin_col + i, row_5k, y < 0))
+            max_x = max_x + size_x_5k
+        letter_str += ')'
+    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+        begin_col = math.floor(col_5k / 2) * 2
+        min_x = min_x + begin_col
+        max_x = min_x
+        for i in range(2):
+            if letter_str == '':
+                letter_str = '({:03d}'.format(util.get_letter_num2(begin_col + i, row_5k, y < 0))
+            else: 
+                letter_str = letter_str + ',{:03d}'.format(util.get_letter_num2(begin_col + i, row_5k, y < 0))
+            max_x = max_x + size_x_5k
+        letter_str += ')'
+    else:
+        letter_str = '({:03d})'.format(util.get_letter_num2(col_5k, row_5k, y < 0))
+        min_x = min_x_5k
+        max_x = max_x_5k
+
+    nomk_str = u'{}-{}-{:03d}-{}'.format(letter, number, last_number, letter_str)
+    if y < 0:
+        nomk_str += util.south_suffix()
+    return nomk_str, min_x, max_x, min_y_5k * mult, max_y_5k * mult
+
+def coords_to_2k(x, y):
+    mult = 1
+    if y < 0:
+        mult = -1
+
+    abs_y = abs(y)
+    letter_str = ''
+    letter, number, last_number, last_letter, min_x, min_y = coords_to_5k_simple(x, y)
+    row_2k, col_2k, size_x_2k, size_y_2k, min_x_2k, max_x_2k, min_y_2k, max_y_2k = util.get_grid_pos(x, abs_y, min_x, min_y, 576, y < 0)
+
+    if abs_y > 88.0:
+        raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
+    elif abs_y > 76.0: # Create quad sheets
+        letter_str = util.get_row_ru_small(row_2k, y < 0)
+        min_x = min_x_2k - size_x_2k * col_2k
+        max_x = min_x + size_x_2k * 3
+    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+        # FIXME: How to create double sheets?
+        raise Exception('Unsupported double sheets for this scale')
+    else:
+        letter_str = util.get_letter_ru_small(col_2k, row_2k, y < 0)
+        min_x = min_x_2k
+        max_x = max_x_2k
+
+    nomk_str = u'{}-{}-{:03d}-({:03d})-{}'.format(letter, number, last_number, last_letter, letter_str)
+    if y < 0:
+        nomk_str += util.south_suffix()
+    return nomk_str, min_x, max_x, min_y_2k * mult, max_y_2k * mult

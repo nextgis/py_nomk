@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -189,9 +189,7 @@ def test_10k():
 
     nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_10k(37.61556, 55.75222)
     scale, min_x2, max_x2, min_y2, max_y2 = text.text_to_10k(letter, zone, number2, letter2, last_letter, last_number, is_south)
-    #print(u'{} - {},{},{},{}'.format(nomk_str, min_x1, max_x1, min_y1, max_y1))
-    #print(u'{} - {},{},{},{}'.format(scale, min_x2, max_x2, min_y2, max_y2))
-    
+
     assert abs(min_x1 - min_x2) < delta
     assert abs(max_x1 - max_x2) < delta
     assert abs(min_y1 - min_y2) < delta
@@ -199,3 +197,42 @@ def test_10k():
 
     assert scale == '10k'
     assert nomk_str == u'N-37-004-В-а-4'
+
+def test_5k():
+    is_south = False
+    letter = 'N'
+    zone = 37
+    number2 = 4
+    last_number = 180
+
+    nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_5k(37.61556, 55.75222)
+    scale, min_x2, max_x2, min_y2, max_y2 = text.text_to_5k(letter, zone, number2, last_number, is_south)
+    
+    assert abs(min_x1 - min_x2) < delta
+    assert abs(max_x1 - max_x2) < delta
+    assert abs(min_y1 - min_y2) < delta
+    assert abs(max_y1 - max_y2) < delta
+
+    assert scale == '5k'
+    assert nomk_str == u'N-37-004-(180)'
+
+def test_2k():
+    is_south = False
+    letter = 'N'
+    zone = 37
+    number2 = 4
+    last_number = 180
+    last_letter = u'и'
+
+    nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_2k(37.61556, 55.75222)
+    scale, min_x2, max_x2, min_y2, max_y2 = text.text_to_2k(letter, zone, number2, last_number, last_letter, is_south)
+    print(u'{} - {},{},{},{}'.format(nomk_str, min_x1, max_x1, min_y1, max_y1))
+    print(u'{} - {},{},{},{}'.format(scale, min_x2, max_x2, min_y2, max_y2))
+    
+    assert abs(min_x1 - min_x2) < delta
+    assert abs(max_x1 - max_x2) < delta
+    assert abs(min_y1 - min_y2) < delta
+    assert abs(max_y1 - max_y2) < delta
+
+    assert scale == '2k'
+    assert nomk_str == u'N-37-004-(180)-и'

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -181,4 +181,27 @@ def test_10k_parse():
     assert parts[3] == u'А'
     assert parts[4] == u'б'
     assert parts[5] == 2
+    assert is_south == False
+
+def test_5k_parse():
+    nomk_str = u'O-41-109-(064)'
+    scale, parts, is_south = parser.parse(nomk_str, '5k')
+    assert scale == '5k'
+    assert len(parts) == 4
+    assert parts[0] == 'O'
+    assert parts[1] == 41
+    assert parts[2] == 109
+    assert parts[3] == 64
+    assert is_south == False
+
+def test_2k_parse():
+    nomk_str = u'M-38-125-(063)-а'
+    scale, parts, is_south = parser.parse(nomk_str, '2k')
+    assert scale == '2k'
+    assert len(parts) == 5
+    assert parts[0] == 'M'
+    assert parts[1] == 38
+    assert parts[2] == 125
+    assert parts[3] == 63
+    assert parts[4] == u'а'
     assert is_south == False

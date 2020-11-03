@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -122,6 +122,25 @@ def parse10k(nomk_str):
     last_number = int(result.group(7).replace(',', ''))
     return [letter, number, number2, letter2, last_letter, last_number], result.group(8) != None
 
+def parse5k(nomk_str):
+    regex_5k = ur'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)\s?({})?'.format(south_suffix())
+    result = re.match(regex_5k, nomk_str)
+    letter = result.group(1)
+    number = int(result.group(2))
+    number2 = int(result.group(3))
+    last_number = int(result.group(4).replace(',', ''))
+    return [letter, number, number2, last_number], result.group(5) != None
+
+def parse2k(nomk_str):
+    regex_2k = ur'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)-(,?[а-и])+\s?({})?'.format(south_suffix())
+    result = re.match(regex_2k, nomk_str)
+    letter = result.group(1)
+    number = int(result.group(2))
+    number2 = int(result.group(3))
+    last_number = int(result.group(4))
+    last_letter = result.group(5).replace(',', '')
+    return [letter, number, number2, last_number, last_letter], result.group(6) != None
+
 def parse(nomk_str, scale = ''):
     """Parses input nomenclature string and returns scale and 
         list of parts of first sheet
@@ -145,8 +164,22 @@ def parse(nomk_str, scale = ''):
         return ('25k',) + parse25k(nomk_str)
     elif scale == '10k':
         return ('10k',) + parse10k(nomk_str)
+    elif scale == '5k':
+        return ('5k',) + parse5k(nomk_str)
+    elif scale == '2k':
+        return ('2k',) + parse2k(nomk_str)
     else:
         # Test all parsers
+        try:
+            return ('2k',) + parse2k(nomk_str)
+        except:
+            pass
+
+        try:
+            return ('5k',) + parse5k(nomk_str)
+        except:
+            pass
+
         try:
             return ('10k',) + parse10k(nomk_str)
         except:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ################################################################################
-# Project:  Topomaps nomenclature utility
-# Purpose:  Transform coordinates to nomenclature and vice versa
-# Author:   Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Project: Topomaps nomenclature utility
+# Purpose: Transform coordinates to nomenclature and vice versa
+# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
 # Copyright (C) 2020, NextGIS <info@nextgis.com>
@@ -33,10 +33,7 @@ roman_figures = ['I', 'II', 'III', 'IV', 'V', 'VI',
     'XIX', 'XX', 'XXI', 'XXII', 'XXIII', 'XXIV',
     'XXV', 'XXVI', 'XXVII', 'XXVIII', 'XXIX', 'XXX', 
     'XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI']
-        
-ru_letters_small = [['ж', 'з', 'и'],
-                    ['г', 'д', 'е'],
-                    ['а', 'б', 'в']]
+ru_letters_small = [u'а', u'б', u'в', u'г', u'д', u'е', u'ж', u'з', u'и']
 
 def south_suffix():
     return u'(ЮП)'
@@ -48,6 +45,15 @@ def get_pos_ru(letter, is_south):
 
     if not is_south:
         row = 1 - row
+    return col, row
+
+def get_pos_ru_small(letter, is_south):
+    pos = ru_letters_small.index(letter)
+    row = int(math.floor(pos / 3))
+    col = pos - row * 3
+
+    if not is_south:
+        row = 2 - row
     return col, row
 
 def get_row_ru(row, is_south):
@@ -74,11 +80,33 @@ def get_row_num(row, is_south):
         else:
             return u'1,2'
 
+def get_row_ru_small(row, is_south):
+    if is_south:
+        if row == 0:
+            return u'а,б,в'
+        elif row == 1:
+            return u'г,д,е'
+        else:
+            return u'ж,з,и'
+    else:
+        if row == 0:
+            return u'ж,з,и'
+        elif row == 1:
+            return u'г,д,е'
+        else:
+            return u'а,б,в'
+
 def get_letter_ru(col, row, is_south):
     if not is_south:
         row = 1 - row
     index = row * 2 + col
     return ru_letters[index]
+
+def get_letter_ru_small(col, row, is_south):
+    if not is_south:
+        row = 2 - row
+    index = row * 3 + col
+    return ru_letters_small[index]
 
 def get_pos_roman(letter, is_south):
     pos = roman_figures.index(letter)
@@ -103,6 +131,14 @@ def get_pos_num(number, is_south):
         row = 11 - row
     return col, row
 
+def get_pos_num2(number, is_south):
+    row = int(math.floor(number / 16))
+    col = number - row * 16 - 1
+
+    if not is_south:
+        row = 15 - row
+    return col, row
+
 def get_pos_num_small(number, is_south):
     row = int(math.floor(number / 2)) - 1
     col = number - row * 2 - 1
@@ -115,6 +151,12 @@ def get_letter_num(col, row, is_south):
     if not is_south:
         row = 11 - row
     index = row * 12 + col + 1 # index starts from 1
+    return int(index)
+
+def get_letter_num2(col, row, is_south):
+    if not is_south:
+        row = 15 - row
+    index = row * 16 + col + 1 # index starts from 1
     return int(index)
 
 def get_letter_num_simple(col, row, is_south):
