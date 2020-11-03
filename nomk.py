@@ -31,21 +31,6 @@ import parser
 import text
 import coord
 
-def coords_to_10k(x, y):
-
-    # TODO: Fix for south
-    # TODO: Add double and quad sheets - ru: Севернее 60° с.ш. и южнее 60° ю.ш. карты сдвоены, севернее 76° с.ш. и южнее 76° ю.ш. счетверены.
-    
-    abs_y = abs(y)
-    nomk, min_x, max_x, min_y, max_y = coords_to_25k(x, abs_y)
-    row, col, min_x, max_x, min_y, max_y = get_grid_pos(x, abs_y, min_x, min_y, 96)
-
-    letter = (1 - row) * 2 + col + 1
-
-    if y < 0:
-        return '{}-{}(ЮП)'.format(nomk, letter), min_x, max_x, -min_y, -max_y
-    return '{}-{}'.format(nomk, letter), min_x, max_x, min_y, max_y
-
 def coords_to_5k(x, y, simple=False):
 
     # TODO: Fix for south
@@ -108,8 +93,8 @@ if __name__ == "__main__":
         print(u'1 : 50 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_25k(X, Y)
         print(u'1 : 25 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
-        nomk, min_x, max_x, min_y, max_y = coords_to_10k(X, Y)
-        print('1 : 10 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        nomk, min_x, max_x, min_y, max_y = coord.coords_to_10k(X, Y)
+        print(u'1 : 10 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coords_to_5k(X, Y)
         print('1 : 5 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coords_to_2k(X, Y)
@@ -139,6 +124,10 @@ if __name__ == "__main__":
             exit(0)
         elif scale == '25k':
             scale, min_x, max_x, min_y, max_y = text.text_to_25k(parts[0], parts[1], parts[2], parts[3], parts[4], is_south)
+            print('{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(scale, min_x, min_y, max_x, max_y))
+            exit(0)
+        elif scale == '10k':
+            scale, min_x, max_x, min_y, max_y = text.text_to_10k(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], is_south)
             print('{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(scale, min_x, min_y, max_x, max_y))
             exit(0)
         else:

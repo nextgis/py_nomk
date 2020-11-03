@@ -62,6 +62,18 @@ def get_row_ru(row, is_south):
         else:
             return u'А,Б'
 
+def get_row_num(row, is_south):
+    if is_south:
+        if row == 0:
+            return u'1,2'
+        else:
+            return u'3,4'
+    else:
+        if row == 0:
+            return u'3,4'
+        else:
+            return u'1,2'
+
 def get_letter_ru(col, row, is_south):
     if not is_south:
         row = 1 - row
@@ -91,10 +103,24 @@ def get_pos_num(number, is_south):
         row = 11 - row
     return col, row
 
+def get_pos_num_small(number, is_south):
+    row = int(math.floor(number / 2)) - 1
+    col = number - row * 2 - 1
+
+    if not is_south:
+        row = 1 - row
+    return col, row
+
 def get_letter_num(col, row, is_south):
     if not is_south:
         row = 11 - row
     index = row * 12 + col + 1 # index starts from 1
+    return int(index)
+
+def get_letter_num_simple(col, row, is_south):
+    if not is_south:
+        row = 1 - row
+    index = row * 2 + col + 1 # index starts from 1
     return int(index)
 
 def get_grid_pos(x, y, min_x, min_y, parts, is_south):

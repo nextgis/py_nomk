@@ -111,6 +111,17 @@ def parse25k(nomk_str):
     last_letter = result.group(5).replace(',', '')
     return [letter, number, number2, letter2, last_letter], result.group(6) != None
 
+def parse10k(nomk_str):
+    regex_10k = ur'^([A-V])-(\d+)-(\d+)-([А-Г])-((,?[а-г])+-(,?\d)+)+\s?({})?'.format(south_suffix())
+    result = re.match(regex_10k, nomk_str)
+    letter = result.group(1)
+    number = int(result.group(2))
+    number2 = int(result.group(3))
+    letter2 = result.group(4).replace(',', '')
+    last_letter = result.group(6).replace(',', '')
+    last_number = int(result.group(7).replace(',', ''))
+    return [letter, number, number2, letter2, last_letter, last_number], result.group(8) != None
+
 def parse(nomk_str, scale = ''):
     """Parses input nomenclature string and returns scale and 
         list of parts of first sheet
@@ -132,8 +143,15 @@ def parse(nomk_str, scale = ''):
         return ('50k',) + parse50k(nomk_str)
     elif scale == '25k':
         return ('25k',) + parse25k(nomk_str)
+    elif scale == '10k':
+        return ('10k',) + parse10k(nomk_str)
     else:
         # Test all parsers
+        try:
+            return ('10k',) + parse10k(nomk_str)
+        except:
+            pass
+
         try:
             return ('25k',) + parse25k(nomk_str)
         except:

@@ -222,6 +222,26 @@ def coords_to_50k_simple(x, y):
     letter_str = util.get_letter_ru(col_50k, row_50k, y < 0)
     return letter, number, last_number, letter_str, min_x_50k, min_y_50k * mult
 
+
+def coords_to_25k_simple(x, y):
+    mult = 1
+    if y < 0:
+        mult = -1
+
+    abs_y = abs(y)
+
+    letter, number, last_number, last_letter, min_x, min_y = coords_to_50k_simple(x, y)
+    row_25k, col_25k, size_x_25k, size_y_25k, min_x_25k, max_x_25k, min_y_25k, max_y_25k = util.get_grid_pos(x, abs_y, min_x, min_y, 48, y < 0)
+
+    pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
+
+    col_str = ''
+    min_x = min_x_25k
+    max_x = max_x_25k
+
+    letter_str = util.get_letter_ru(col_25k, row_25k, y < 0).lower()
+    return letter, number, last_number, last_letter, letter_str, min_x_25k, min_y_25k * mult
+
 def coords_to_100k(x, y):
     mult = 1
     if y < 0:
@@ -343,3 +363,45 @@ def coords_to_25k(x, y):
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_25k * mult, max_y_25k * mult
+
+def coords_to_10k(x, y):
+    mult = 1
+    if y < 0:
+        mult = -1
+    
+    abs_y = abs(y)
+    letter, number, last_number, letter2, last_letter, min_x, min_y = coords_to_25k_simple(x, abs_y)
+    row_10k, col_10k, size_x_10k, size_y_10k, min_x_10k, max_x_10k, min_y_10k, max_y_10k = util.get_grid_pos(x, abs_y, min_x, min_y, 96, y < 0)
+
+    pos_x, pos_y = util.get_pos_ru(last_letter.upper(), y < 0)
+
+    col_str = ''
+    min_x = min_x_10k
+    max_x = max_x_10k
+
+    if abs_y > 88.0:
+        raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
+    elif abs_y > 76.0: # Create quad sheets
+        letter_str = util.get_row_num(row_10k, y < 0)
+        if pos_x % 2 == 0:
+            last_letter1 = util.get_letter_ru(pos_x - 1, pos_y, y < 1).lower()
+            last_letter2 = util.get_letter_ru(pos_x, pos_y, y < 1).lower()
+            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+            min_x -= size_x_10k * 2
+        else:
+            last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
+            last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
+            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+        max_x = min_x + size_x_10k * 4
+    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+        letter_str = util.get_row_num(row_10k, y < 0)
+        col_str = u'{}-{}'.format(last_letter, letter_str)
+        max_x = min_x + size_x_10k * 2
+    else:
+        letter_str = util.get_letter_num_simple(col_10k, row_10k, y < 0)
+        col_str = u'{}-{}'.format(last_letter, letter_str)
+
+    nomk_str = u'{}-{}-{:03d}-{}-{}'.format(letter, number, last_number, letter2, col_str)
+    if y < 0:
+        nomk_str += util.south_suffix()
+    return nomk_str, min_x, max_x, min_y_10k * mult, max_y_10k * mult

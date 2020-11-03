@@ -110,7 +110,6 @@ def text_to_50k(letter, number, last_number, last_letter, is_south):
     nomk, min_x, max_x, min_y, max_y = coord.coords_to_50k(min_x + 0.125, (min_y + 0.083) * mult)
     return '50k', min_x, max_x, min_y, max_y
 
-
 def text_to_25k(letter, number, number2, letter2, last_letter, is_south):
     col, row = util.get_pos_num(number2, is_south)
 
@@ -137,3 +136,35 @@ def text_to_25k(letter, number, number2, letter2, last_letter, is_south):
     # Get bbox by some point in sheet [0.125 x 0.0833]
     nomk, min_x, max_x, min_y, max_y = coord.coords_to_25k(min_x + 0.0625, (min_y + 0.042) * mult)
     return '25k', min_x, max_x, min_y, max_y
+
+def text_to_10k(letter, number, number2, letter2, last_letter, last_number, is_south):
+    col, row = util.get_pos_num(number2, is_south)
+
+    min_x = 6.0 * (number - 31)
+    min_x += 0.5 * col
+
+    min_y = 4.0 * util.letters.index(letter)
+    min_y += 4.0 / 12 * row
+
+    col_50k, row_50k = util.get_pos_ru(letter2, is_south)
+
+    min_x += 6.0 / 24 * col_50k
+    min_y += 4.0 / 24 * row_50k
+
+    col_25k, row_25k = util.get_pos_ru(last_letter.upper(), is_south)
+
+    min_x += 6.0 / 48 * col_25k
+    min_y += 4.0 / 48 * row_25k
+
+    col_10k, row_10k = util.get_pos_num_small(last_number, is_south)
+
+    min_x += 6.0 / 96 * col_10k
+    min_y += 4.0 / 96 * row_10k
+
+    mult = 1
+    if is_south:
+        mult = -1
+
+    # Get bbox by some point in sheet [0.0625 x 0.04133]
+    nomk, min_x, max_x, min_y, max_y = coord.coords_to_10k(min_x + 0.0313, (min_y + 0.0208) * mult)
+    return '10k', min_x, max_x, min_y, max_y

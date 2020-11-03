@@ -169,3 +169,16 @@ def test_25k_parse():
     assert parts[3] == u'Г'
     assert parts[4] == u'б'
     assert is_south == True
+
+def test_10k_parse():
+    nomk_str = u'T-47-004-А-а-1,2,б-1,2' # || U-47-136-В-в-3,4,г-3,4 || U-47-136-В-в-1,2,г-1,2
+    scale, parts, is_south = parser.parse(nomk_str, '10k')
+    assert scale == '10k'
+    assert len(parts) == 6
+    assert parts[0] == 'T'
+    assert parts[1] == 47
+    assert parts[2] == 4
+    assert parts[3] == u'А'
+    assert parts[4] == u'б'
+    assert parts[5] == 2
+    assert is_south == False
