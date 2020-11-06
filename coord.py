@@ -478,13 +478,13 @@ def coords_to_2k(x, y):
 
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
-    elif abs_y > 76.0: # Create quad sheets
+    elif abs_y > 60.0 and abs_y <= 88.0: # abs_y > 76.0: # Create triple sheets
+        # FIXME: https://geodesist.ru/threads/planshety-1-2000-i-1-5000-na-ploschad-bolee-20-km2.59117/page-2#post-976613
         letter_str = util.get_row_ru_small(row_2k, y < 0)
         min_x = min_x_2k - size_x_2k * col_2k
         max_x = min_x + size_x_2k * 3
-    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
-        # FIXME: How to create double sheets?
-        raise Exception('Unsupported double sheets for this scale')
+    # elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+    #     raise Exception('Unsupported double sheets for this scale')
     else:
         letter_str = util.get_letter_ru_small(col_2k, row_2k, y < 0)
         min_x = min_x_2k
