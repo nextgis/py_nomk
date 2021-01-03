@@ -2,10 +2,10 @@
 ################################################################################
 # Project: Topomaps nomenclature utility
 # Purpose: Transform coordinates to nomenclature and vice versa
-# Author:  Dmitry Barishnikov, dmitry.baryshnikov@nextgis.ru
+# Author:  Dmitry Baryshnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
-# Copyright (C) 2020, NextGIS <info@nextgis.com>
+# Copyright (C) 2020-2021, NextGIS <info@nextgis.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
