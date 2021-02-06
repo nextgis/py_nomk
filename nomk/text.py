@@ -22,8 +22,8 @@
 #
 ################################################################################
 
-import coord
-import util
+from . import coord
+from . import util
 
 def text_to_1m(letter, number, is_south):
     min_x = 6.0 * (number - 31)

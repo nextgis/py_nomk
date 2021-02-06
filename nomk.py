@@ -27,9 +27,7 @@
 # > python nomk.py -n "N-37-100"
 
 import argparse
-import parser
-import text
-import coord
+from nomk import parser, text, coord
 
 if __name__ == "__main__":
     parser_obj = argparse.ArgumentParser(description='Transform coordinates to nomenclature and vice versa')
@@ -49,23 +47,23 @@ if __name__ == "__main__":
         if X > 180.0 or X < -180.0 or Y > 90.0 or Y < -90.0:
             exit('Coordintates out of bounds')
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_1m(X, Y)
-        print(u'1 : 1 000 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 1 000 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_500k(X, Y)
-        print(u'1 : 500 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 500 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_200k(X, Y)
-        print(u'1 : 200 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 200 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_100k(X, Y)
-        print(u'1 : 100 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 100 000\t{}\t\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_50k(X, Y)
-        print(u'1 : 50 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 50 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_25k(X, Y)
-        print(u'1 : 25 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 25 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_10k(X, Y)
-        print(u'1 : 10 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 10 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_5k(X, Y)
-        print(u'1 : 5 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 5 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         nomk, min_x, max_x, min_y, max_y = coord.coords_to_2k(X, Y)
-        print(u'1 : 2 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
+        print('1 : 2 000\t{}\t[{:.6f} {:.6f}, {:.6f} {:.6f}]'.format(nomk, min_x, min_y, max_x, max_y))
         
     if args.nomk is not None:
         scale, parts, is_south = parser.parse(args.nomk, args.scale)

@@ -23,9 +23,7 @@
 ################################################################################
  
 import pytest
-import coord
-import util
-import text
+from nomk import coord, util, text
 
 delta = 0.00000001
 

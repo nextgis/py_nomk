@@ -23,8 +23,7 @@
 ################################################################################
 
 import math
-import util
-
+from . import util
 
 def get_1m(x, y):
     col = int(math.floor(x / 6.0))
@@ -86,7 +85,7 @@ def coords_to_1m(x, y):
         col_str = '{}'.format(col + 31)
         max_x = min_x + 6.0
 
-    nomk_str = u'{}-{}'.format(util.letters[row], col_str)
+    nomk_str = '{}-{}'.format(util.letters[row], col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -99,7 +98,7 @@ def coords_to_500k(x, y):
     abs_y = abs(y)
     col, row, min_x, min_y = get_1m(x, abs_y)
     letter = ''
-    col_str = u''
+    col_str = ''
 
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
@@ -111,10 +110,10 @@ def coords_to_500k(x, y):
             letter = util.get_row_ru(0, y < 0)
 
         if col % 2 == 0:
-            col_str = u'{}-{},{}-{}'.format(col - 1, letter, col, letter)
+            col_str = '{}-{},{}-{}'.format(col - 1, letter, col, letter)
             min_x -= 6
         else:
-            col_str = u'{}-{},{}-{}'.format(col, letter, col + 1, letter)
+            col_str = '{}-{},{}-{}'.format(col, letter, col + 1, letter)
         max_x = min_x + 12.0
         
     elif abs_y < 76.0 and abs_y > 60.0: # Create double sheets    
@@ -124,7 +123,7 @@ def coords_to_500k(x, y):
         else: 
             letter = util.get_row_ru(0, y < 0)
         max_x = min_x + 6.0
-        col_str = u'{}={}'.format(col, letter)
+        col_str = '{}={}'.format(col, letter)
     else:
         local_col = int(math.floor(abs(x - min_x) / 3.0))
         local_row = int(math.floor((abs_y - min_y) / 2.0))
@@ -135,11 +134,11 @@ def coords_to_500k(x, y):
 
         max_x = min_x + 3.0
 
-        col_str = u'{}-{}'.format(col, letter)
+        col_str = '{}-{}'.format(col, letter)
 
     max_y = min_y + 2.0
 
-    nomk_str = u'{}-{}'.format(util.letters[row], col_str)
+    nomk_str = '{}-{}'.format(util.letters[row], col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -191,7 +190,7 @@ def coords_to_200k(x, y):
 
     max_y = min_y + size_y
 
-    nomk_str = u'{}-{}-{}'.format(util.letters[row], col, letter)
+    nomk_str = '{}-{}-{}'.format(util.letters[row], col, letter)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -294,7 +293,7 @@ def coords_to_100k(x, y):
     else:
         letter_str = '{:03d}'.format(util.get_letter_num(col_100k, row_100k, y < 0))
 
-    nomk_str = u'{}-{}-{}'.format(util.letters[row], col, letter_str)
+    nomk_str = '{}-{}-{}'.format(util.letters[row], col, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -318,20 +317,20 @@ def coords_to_50k(x, y):
     elif abs_y > 76.0: # Create quad sheets
         letter_str = util.get_row_ru(row_50k, y < 0)
         if last_number % 2 == 0:
-            col_str = u'{:03d}-{},{:03d}-{}'.format(last_number - 1, letter_str, last_number, letter_str)
+            col_str = '{:03d}-{},{:03d}-{}'.format(last_number - 1, letter_str, last_number, letter_str)
             min_x -= size_x_50k * 2
         else:
-            col_str = u'{:03d}-{},{:03d}-{}'.format(last_number, letter_str, last_number + 1, letter_str)
+            col_str = '{:03d}-{},{:03d}-{}'.format(last_number, letter_str, last_number + 1, letter_str)
         max_x = min_x + size_x_50k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         letter_str = util.get_row_ru(row_50k, y < 0)
-        col_str = u'{:03d}-{}'.format(last_number, letter_str)
+        col_str = '{:03d}-{}'.format(last_number, letter_str)
         max_x = min_x + size_x_50k * 2
     else:
         letter_str = util.get_letter_ru(col_50k, row_50k, y < 0)
-        col_str = u'{:03d}-{}'.format(last_number, letter_str)
+        col_str = '{:03d}-{}'.format(last_number, letter_str)
 
-    nomk_str = u'{}-{}-{}'.format(letter, number, col_str)
+    nomk_str = '{}-{}-{}'.format(letter, number, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_50k * mult, max_y_50k * mult
@@ -359,22 +358,22 @@ def coords_to_25k(x, y):
         if pos_x % 2 == 0:
             last_letter1 = util.get_letter_ru(pos_x - 1, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x, pos_y, y < 1)
-            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+            col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
             min_x -= size_x_25k * 2
         else:
             last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
-            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+            col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
         max_x = min_x + size_x_25k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         letter_str = util.get_row_ru(row_25k, y < 0).lower()
-        col_str = u'{}-{}'.format(last_letter, letter_str)
+        col_str = '{}-{}'.format(last_letter, letter_str)
         max_x = min_x + size_x_25k * 2
     else:
         letter_str = util.get_letter_ru(col_25k, row_25k, y < 0).lower()
-        col_str = u'{}-{}'.format(last_letter, letter_str)
+        col_str = '{}-{}'.format(last_letter, letter_str)
 
-    nomk_str = u'{}-{}-{:03d}-{}'.format(letter, number, last_number, col_str)
+    nomk_str = '{}-{}-{:03d}-{}'.format(letter, number, last_number, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_25k * mult, max_y_25k * mult
@@ -401,22 +400,22 @@ def coords_to_10k(x, y):
         if pos_x % 2 == 0:
             last_letter1 = util.get_letter_ru(pos_x - 1, pos_y, y < 1).lower()
             last_letter2 = util.get_letter_ru(pos_x, pos_y, y < 1).lower()
-            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+            col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
             min_x -= size_x_10k * 2
         else:
             last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
-            col_str = u'{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+            col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
         max_x = min_x + size_x_10k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         letter_str = util.get_row_num(row_10k, y < 0)
-        col_str = u'{}-{}'.format(last_letter, letter_str)
+        col_str = '{}-{}'.format(last_letter, letter_str)
         max_x = min_x + size_x_10k * 2
     else:
         letter_str = util.get_letter_num_simple(col_10k, row_10k, y < 0)
-        col_str = u'{}-{}'.format(last_letter, letter_str)
+        col_str = '{}-{}'.format(last_letter, letter_str)
 
-    nomk_str = u'{}-{}-{:03d}-{}-{}'.format(letter, number, last_number, letter2, col_str)
+    nomk_str = '{}-{}-{:03d}-{}-{}'.format(letter, number, last_number, letter2, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_10k * mult, max_y_10k * mult
@@ -461,7 +460,7 @@ def coords_to_5k(x, y):
         min_x = min_x_5k
         max_x = max_x_5k
 
-    nomk_str = u'{}-{}-{:03d}-{}'.format(letter, number, last_number, letter_str)
+    nomk_str = '{}-{}-{:03d}-{}'.format(letter, number, last_number, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_5k * mult, max_y_5k * mult
@@ -490,7 +489,7 @@ def coords_to_2k(x, y):
         min_x = min_x_2k
         max_x = max_x_2k
 
-    nomk_str = u'{}-{}-{:03d}-({:03d})-{}'.format(letter, number, last_number, last_letter, letter_str)
+    nomk_str = '{}-{}-{:03d}-({:03d})-{}'.format(letter, number, last_number, last_letter, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_2k * mult, max_y_2k * mult

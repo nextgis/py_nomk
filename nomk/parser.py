@@ -23,8 +23,7 @@
 ################################################################################
 
 import re
-import nomk
-import util
+from . import util
 
 # https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D1%80%D0%B0%D0%B7%D0%B3%D1%80%D0%B0%D1%84%D0%BA%D0%B8_%D0%B8_%D0%BD%D0%BE%D0%BC%D0%B5%D0%BD%D0%BA%D0%BB%D0%B0%D1%82%D1%83%D1%80%D1%8B_%D1%82%D0%BE%D0%BF%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D1%85_%D0%BA%D0%B0%D1%80%D1%82
 
@@ -52,7 +51,7 @@ import util
 # 2k M-38-125-(063)-а
 
 def south_suffix():
-    return util.south_suffix().replace(u'(', u'\(').replace(u')', u'\)')
+    return util.south_suffix().replace('(', r'\(').replace(')', r'\)')
 
 def get_first_sym(val):
     some_str = val.replace(',', '')
@@ -60,14 +59,14 @@ def get_first_sym(val):
     return parts[0]
 
 def parse1m(nomk_str):
-    regex_1m = ur'^([A-V])-((,?\d+)+)\s?({})?'.format(south_suffix())
+    regex_1m = r'^([A-V])-((,?\d+)+)\s?({})?'.format(south_suffix())
     result = re.match(regex_1m, nomk_str)
     letter = result.group(1)
     number = int(result.group(3).replace(',', ''))
     return [letter, number], result.group(4) != None
 
 def parse500k(nomk_str):
-    regex_500k = ur'^([A-V])-((,?\d+-(,?[А-Г])+)+)\s?({})?'.format(south_suffix())
+    regex_500k = r'^([A-V])-((,?\d+-(,?[А-Г])+)+)\s?({})?'.format(south_suffix())
     result = re.match(regex_500k, nomk_str)
     letter = result.group(1)
     number = int(get_first_sym(result.group(3)))
@@ -75,7 +74,7 @@ def parse500k(nomk_str):
     return [letter, number, last_letter], result.group(5) != None
 
 def parse200k(nomk_str):
-    regex_200k = ur'^([A-V])-((,?\d+-(,?[IVX]+)+)+)\s?({})?'.format(south_suffix())
+    regex_200k = r'^([A-V])-((,?\d+-(,?[IVX]+)+)+)\s?({})?'.format(south_suffix())
     result = re.match(regex_200k, nomk_str)
     letter = result.group(1)
     number = int(get_first_sym(result.group(2)))
@@ -83,7 +82,7 @@ def parse200k(nomk_str):
     return [letter, number, last_letter], result.group(5) != None
 
 def parse100k(nomk_str):
-    regex_100k = ur'^([A-V])-(\d+)-((,?\d+)+)\s?({})?'.format(south_suffix())
+    regex_100k = r'^([A-V])-(\d+)-((,?\d+)+)\s?({})?'.format(south_suffix())
     result = re.match(regex_100k, nomk_str)
     letter = result.group(1)
     number = int(get_first_sym(result.group(2)))
@@ -92,7 +91,7 @@ def parse100k(nomk_str):
     return [letter, number, last_letter_num], result.group(5) != None
 
 def parse50k(nomk_str):
-    regex_50k = ur'^([A-V])-(\d+)-((,?\d+)-(,?[А-Г])+)+\s?({})?'.format(south_suffix())
+    regex_50k = r'^([A-V])-(\d+)-((,?\d+)-(,?[А-Г])+)+\s?({})?'.format(south_suffix())
     result = re.match(regex_50k, nomk_str)
     letter = result.group(1)
     number = int(get_first_sym(result.group(2)))
@@ -102,7 +101,7 @@ def parse50k(nomk_str):
     return [letter, number, last_number_num, last_letter], result.group(6) != None
 
 def parse25k(nomk_str):
-    regex_25k = ur'^([A-V])-(\d+)-(\d+)-(,?[А-Г]-(,?[а-г])+)+\s?({})?'.format(south_suffix())
+    regex_25k = r'^([A-V])-(\d+)-(\d+)-(,?[А-Г]-(,?[а-г])+)+\s?({})?'.format(south_suffix())
     result = re.match(regex_25k, nomk_str)
     letter = result.group(1)
     number = int(result.group(2))
@@ -112,7 +111,7 @@ def parse25k(nomk_str):
     return [letter, number, number2, letter2, last_letter], result.group(6) != None
 
 def parse10k(nomk_str):
-    regex_10k = ur'^([A-V])-(\d+)-(\d+)-([А-Г])-((,?[а-г])+-(,?\d)+)+\s?({})?'.format(south_suffix())
+    regex_10k = r'^([A-V])-(\d+)-(\d+)-([А-Г])-((,?[а-г])+-(,?\d)+)+\s?({})?'.format(south_suffix())
     result = re.match(regex_10k, nomk_str)
     letter = result.group(1)
     number = int(result.group(2))
@@ -123,7 +122,7 @@ def parse10k(nomk_str):
     return [letter, number, number2, letter2, last_letter, last_number], result.group(8) != None
 
 def parse5k(nomk_str):
-    regex_5k = ur'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)\s?({})?'.format(south_suffix())
+    regex_5k = r'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)\s?({})?'.format(south_suffix())
     result = re.match(regex_5k, nomk_str)
     letter = result.group(1)
     number = int(result.group(2))
@@ -132,7 +131,7 @@ def parse5k(nomk_str):
     return [letter, number, number2, last_number], result.group(5) != None
 
 def parse2k(nomk_str):
-    regex_2k = ur'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)-(,?[а-и])+\s?({})?'.format(south_suffix())
+    regex_2k = r'^([A-V])-(\d+)-(\d+)-\((,?\d+)+\)-(,?[а-и])+\s?({})?'.format(south_suffix())
     result = re.match(regex_2k, nomk_str)
     letter = result.group(1)
     number = int(result.group(2))
