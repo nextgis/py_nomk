@@ -234,3 +234,18 @@ def test_2k():
 
     assert scale == '2k'
     assert nomk_str == u'N-37-004-(180)-и'
+
+
+def test_O_46_060():
+    _, O_46_059_min_x2, O_46_059_max_x2, O_46_059_min_y2, O_46_059_max_y2 = text.text_to_100k('O', 46, 59, False)
+    _, O_46_060_min_x2, O_46_060_max_x2, O_46_060_min_y2, O_46_060_max_y2 = text.text_to_100k('O', 46, 60, False)
+    
+    assert O_46_060_min_x2 > O_46_059_min_x2
+    assert O_46_060_max_x2 > O_46_059_max_x2
+
+def test_O_46_072_A():
+    _, O_46_071_Б_min_x2, O_46_071_Б_max_x2, O_46_071_Б_min_y2, O_46_071_Б_max_y2 = text.text_to_100k('O', 46, 71, False)
+    _, O_46_072_А_min_x2, O_46_072_А_max_x2, O_46_072_А_min_y2, O_46_072_А_max_y2 = text.text_to_100k('O', 46, 72, False)
+    
+    assert O_46_072_А_min_x2 > O_46_071_Б_min_x2
+    assert O_46_072_А_max_x2 > O_46_071_max_x2
