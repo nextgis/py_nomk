@@ -124,7 +124,7 @@ def get_letter_roman(col, row, is_south):
     return roman_figures[index]
 
 def get_pos_num(number, is_south):
-    row = int(math.floor(number / 12))
+    row = int(math.floor((number - 1) / 12))
     col = number - row * 12 - 1
 
     if not is_south:
@@ -132,7 +132,7 @@ def get_pos_num(number, is_south):
     return col, row
 
 def get_pos_num2(number, is_south):
-    row = int(math.floor(number / 16))
+    row = int(math.floor((number - 1) / 16))
     col = number - row * 16 - 1
 
     if not is_south:
