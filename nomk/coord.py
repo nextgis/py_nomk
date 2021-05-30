@@ -123,7 +123,7 @@ def coords_to_500k(x, y):
         else: 
             letter = util.get_row_ru(0, y < 0)
         max_x = min_x + 6.0
-        col_str = '{}={}'.format(col, letter)
+        col_str = '{}-{}'.format(col, letter)
     else:
         local_col = int(math.floor(abs(x - min_x) / 3.0))
         local_row = int(math.floor((abs_y - min_y) / 2.0))
@@ -160,7 +160,7 @@ def coords_to_200k(x, y):
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
     elif abs_y > 76.0: # Create triple sheets
-        begin_col = math.floor(col_200k / 3) * 3
+        begin_col = int(math.floor(col_200k / 3) * 3)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(3):
@@ -171,7 +171,7 @@ def coords_to_200k(x, y):
             max_x = max_x + size_x
 
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
-        begin_col = math.floor(col_200k / 2) * 2
+        begin_col = int(math.floor(col_200k / 2) * 2)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(2):
@@ -271,7 +271,7 @@ def coords_to_100k(x, y):
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
     elif abs_y > 76.0: # Create quad sheets
-        begin_col = math.floor(col_100k / 4) * 4
+        begin_col = int(math.floor(col_100k / 4) * 4)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(4):
@@ -281,7 +281,7 @@ def coords_to_100k(x, y):
                 letter_str = letter_str + ',{:03d}'.format(util.get_letter_num(begin_col + i, row_100k, y < 0))
             max_x = max_x + size_x
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
-        begin_col = math.floor(col_100k / 2) * 2
+        begin_col = int(math.floor(col_100k / 2) * 2)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(2):
@@ -434,7 +434,7 @@ def coords_to_5k(x, y):
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
     elif abs_y > 76.0: # Create quad sheets
-        begin_col = math.floor(col_5k / 4) * 4
+        begin_col = int(math.floor(col_5k / 4) * 4)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(4):
@@ -445,7 +445,7 @@ def coords_to_5k(x, y):
             max_x = max_x + size_x_5k
         letter_str += ')'
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
-        begin_col = math.floor(col_5k / 2) * 2
+        begin_col = int(math.floor(col_5k / 2) * 2)
         min_x = min_x + begin_col
         max_x = min_x
         for i in range(2):
