@@ -149,19 +149,19 @@ def coords_to_200k(x, y):
         mult = -1
 
     abs_y = abs(y)
-    col, row, min_x, min_y = get_1m(x, abs_y)
+    col, row, min1_x, min_y = get_1m(x, abs_y)
     letter = ''
     size_x = 6.0 / 6
     size_y = 4.0 / 6
 
     row_200k = int(math.floor((abs_y - min_y) / size_y))
-    col_200k = int(math.floor(abs(x - min_x) / size_x))
+    col_200k = int(math.floor(abs(x - min1_x) / size_x))
 
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
     elif abs_y > 76.0: # Create triple sheets
         begin_col = int(math.floor(col_200k / 3) * 3)
-        min_x = min_x + begin_col
+        min_x = min1_x + begin_col
         max_x = min_x
         for i in range(3):
             if letter == '':
@@ -172,7 +172,7 @@ def coords_to_200k(x, y):
 
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         begin_col = int(math.floor(col_200k / 2) * 2)
-        min_x = min_x + begin_col
+        min_x = min1_x + begin_col
         max_x = min_x
         for i in range(2):
             if letter == '':
@@ -183,11 +183,10 @@ def coords_to_200k(x, y):
     else:
         letter = util.get_letter_roman(col_200k, row_200k, y < 0)
 
-        min_x = min_x + col_200k
-        min_y = min_y + row_200k * size_y
-    
+        min_x = min1_x + col_200k
         max_x = min_x + size_x
 
+    min_y = min_y + row_200k * size_y
     max_y = min_y + size_y
 
     nomk_str = '{}-{}-{}'.format(util.letters[row], col, letter)
@@ -262,9 +261,8 @@ def coords_to_100k(x, y):
         mult = -1
 
     abs_y = abs(y)
-    col, row, min_x, min_y = get_1m(x, abs_y)
-
-    row_100k, col_100k, size_x, size_y, min_x, max_x, min_y, max_y = util.get_grid_pos(x, abs_y, min_x, min_y, 12, y < 0)
+    col, row, min1_x, min1_y = get_1m(x, abs_y)
+    row_100k, col_100k, size_x, size_y, min_x, max_x, min_y, max_y = util.get_grid_pos(x, abs_y, min1_x, min1_y, 12, y < 0)
 
     letter_str = ''
 
@@ -272,7 +270,7 @@ def coords_to_100k(x, y):
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
     elif abs_y > 76.0: # Create quad sheets
         begin_col = int(math.floor(col_100k / 4) * 4)
-        min_x = min_x + begin_col
+        min_x = min1_x + (begin_col * size_x)
         max_x = min_x
         for i in range(4):
             if letter_str == '':
@@ -280,9 +278,9 @@ def coords_to_100k(x, y):
             else: 
                 letter_str = letter_str + ',{:03d}'.format(util.get_letter_num(begin_col + i, row_100k, y < 0))
             max_x = max_x + size_x
-    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+    elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets    
         begin_col = int(math.floor(col_100k / 2) * 2)
-        min_x = min_x + begin_col
+        min_x = min1_x + (begin_col * size_x)
         max_x = min_x
         for i in range(2):
             if letter_str == '':
@@ -324,6 +322,8 @@ def coords_to_50k(x, y):
         max_x = min_x + size_x_50k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         letter_str = util.get_row_ru(row_50k, y < 0)
+        if col_50k % 2 != 0:
+            min_x -= size_x_50k
         col_str = '{:03d}-{}'.format(last_number, letter_str)
         max_x = min_x + size_x_50k * 2
     else:
@@ -345,7 +345,9 @@ def coords_to_25k(x, y):
     letter, number, last_number, last_letter, min_x, min_y = coords_to_50k_simple(x, y)
     row_25k, col_25k, size_x_25k, size_y_25k, min_x_25k, max_x_25k, min_y_25k, max_y_25k = util.get_grid_pos(x, abs_y, min_x, min_y, 48, y < 0)
 
+
     pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
+    print('col: {}, size: {}, min_x: {}, min_x_25k: {}'.format(col_25k, size_x_25k, min_x, min_x_25k))
 
     col_str = ''
     min_x = min_x_25k
@@ -366,6 +368,8 @@ def coords_to_25k(x, y):
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
         max_x = min_x + size_x_25k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+        if col_25k % 2 != 0:
+            min_x -= size_x_25k
         letter_str = util.get_row_ru(row_25k, y < 0).lower()
         col_str = '{}-{}'.format(last_letter, letter_str)
         max_x = min_x + size_x_25k * 2
@@ -403,11 +407,14 @@ def coords_to_10k(x, y):
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
             min_x -= size_x_10k * 2
         else:
+
             last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
         max_x = min_x + size_x_10k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
+        if col_10k % 2 != 0:
+            min_x -= size_x_10k
         letter_str = util.get_row_num(row_10k, y < 0)
         col_str = '{}-{}'.format(last_letter, letter_str)
         max_x = min_x + size_x_10k * 2

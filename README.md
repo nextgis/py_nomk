@@ -1,11 +1,13 @@
 # py_nomk
 
+## Intro
+
 Topographic maps nomenclature calculations
 
 Sample output:
 
 ```bash
-python nomk.py -c 37.0 55.0
+python3 nomk.py -c 37.0 55.0
 
 1 : 1 000 000   N-37            [36.000000 52.000000, 42.000000 56.000000]
 1 : 500 000     N-37-А          [36.000000 54.000000, 39.000000 56.000000]
@@ -17,7 +19,16 @@ python nomk.py -c 37.0 55.0
 1 : 5 000       N-37-27(241)    [37.000000 55.000000, 37.031250 55.020833]
 1 : 2 000       N-37-27(241-ж)  [37.000000 55.000000, 37.010417 55.006944]
 
-python nomk.py -n "U-37,38,39,40"
+python3 nomk.py -n "U-37,38,39,40"
 
 1m      [36.000000 80.000000, 60.000000 84.000000]
+```
+
+## Testing
+
+1. Create docker image with pytest
+
+```bash
+docker build -t py_nomk:dev .
+docker run -it --rm py_nomk:dev pytest -v
 ```

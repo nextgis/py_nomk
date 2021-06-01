@@ -120,6 +120,11 @@ def test_200k():
     assert scale == '200k'
     assert nomk_str == u'N-37-XXXII' + util.south_suffix()
 
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_200k(29.4643518467, 60.4127030704)
+    nomk2_str, min_x2, max_x2, min_y2, max_y2 = coord.coords_to_200k(29.4643518467, 61.0793697371)
+
+    assert nomk1_str != nomk2_str and min_y1 != min_y2 and max_y1 != max_y2
+
 def test_100k():
     is_south = False
     letter = 'N'
@@ -136,6 +141,12 @@ def test_100k():
 
     assert scale == '100k'
     assert nomk_str == u'N-37-004'
+
+    nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_100k(31.4643518467, 60.0793697371)
+    assert min_x1 < 31.4643518467 and max_x1 > 31.4643518467
+    
+    nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_100k(58.94643518467, 76.1793697371)
+    assert min_x1 < 58.94643518467 and max_x1 > 58.94643518467
 
 def test_50k():
     is_south = False
@@ -154,6 +165,11 @@ def test_50k():
 
     assert scale == '50k'
     assert nomk_str == u'N-37-004-В'
+
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(29.38, 60.0793697371)
+    nomk2_str, min_x2, max_x2, min_y2, max_y2 = coord.coords_to_50k(29.15, 60.0793697371)
+
+    assert nomk1_str == nomk2_str and min_x1 == min_x2 and max_x1 == max_x2 and min_y1 == min_y2 and max_y2 == max_y2
 
 def test_25k():
     is_south = False
@@ -176,6 +192,11 @@ def test_25k():
     assert scale == '25k'
     assert nomk_str == u'N-37-004-В-а'
 
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_25k(29.29, 60.0793697371)
+    nomk2_str, min_x2, max_x2, min_y2, max_y2 = coord.coords_to_25k(29.43, 60.0793697371)
+
+    assert nomk1_str == nomk2_str and min_x1 == min_x2 and max_x1 == max_x2 and min_y1 == min_y2 and max_y2 == max_y2
+
 def test_10k():
     is_south = False
     letter = 'N'
@@ -195,6 +216,11 @@ def test_10k():
 
     assert scale == '10k'
     assert nomk_str == u'N-37-004-В-а-4'
+
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_10k(29.39, 60.0793697371)
+    nomk2_str, min_x2, max_x2, min_y2, max_y2 = coord.coords_to_10k(29.48, 60.0793697371)
+
+    assert nomk1_str == nomk2_str and min_x1 == min_x2 and max_x1 == max_x2 and min_y1 == min_y2 and max_y2 == max_y2
 
 def test_5k():
     is_south = False
