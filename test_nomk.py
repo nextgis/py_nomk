@@ -275,3 +275,8 @@ def test_O_46_072_A():
     
     assert O_46_072_A_min_x2 > O_46_071_B_min_x2
     assert O_46_072_A_max_x2 > O_46_071_B_max_x2
+
+
+
+def test_double_100k_P_40_095_096():
+    assert not(text.text_to_100k('P', 40, 95, False) == text.text_to_100k('P', 40, 96, False))
