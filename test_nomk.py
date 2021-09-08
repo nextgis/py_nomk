@@ -58,6 +58,16 @@ def test_1m():
     assert scale == '1m'
     assert nomk_str == u'N-37' + util.south_suffix()
 
+    is_south = False
+    letter = 'U'
+    
+    nomk_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_1m(37.61556, 81.75222, True)
+
+    scale, min_x2, max_x2, min_y2, max_y2 = text.text_to_1m(letter, zone, is_south, True)   
+
+    assert scale == '1m'
+    assert nomk_str == u'U-37'
+
 def test_500k():
     is_south = False
     letter = 'N'

@@ -42,6 +42,14 @@ def test_1m_parse():
     assert parts[1] == 40
     assert is_south == False
 
+    nomk_str = 'U-37'
+    scale, parts, is_south = parser.parse(nomk_str)
+    assert scale == '1m'
+    assert len(parts) == 2
+    assert parts[0] == 'U'
+    assert parts[1] == 37
+    assert is_south == False
+
     nomk_str = 'A-15' + util.south_suffix()
     scale, parts, is_south = parser.parse(nomk_str)
     assert scale == '1m'

@@ -33,7 +33,7 @@ def get_1m(x, y):
 
     return col + 31, row, min_x, min_y
 
-def coords_to_1m(x, y):
+def coords_to_1m(x, y, alternative = False):
     mult = 1
     if y < 0:
         mult = -1
@@ -51,7 +51,7 @@ def coords_to_1m(x, y):
     max_y = min_y + 4.0
     min_x = max_x = 0.0
 
-    if abs_y < 88.0 and abs_y > 76.0: # Create quad sheets
+    if abs_y < 88.0 and abs_y > 76.0 and alternative == False: # Create quad sheets
         new_x = x + 180
         col = int(math.floor(new_x / 24.0))
         min_x = col * 24.0 - 180.0
