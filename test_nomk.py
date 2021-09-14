@@ -181,6 +181,63 @@ def test_50k():
 
     assert nomk1_str == nomk2_str and min_x1 == min_x2 and max_x1 == max_x2 and min_y1 == min_y2 and max_y2 == max_y2
 
+
+    # Test double sheets 
+    ## First
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.20, 75.90)
+
+    assert nomk1_str == 'S-47-003-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 97.50000000000000) < delta
+    assert abs(min_y1 - 75.83333333333334) < delta
+    assert abs(max_y1 - 76.00000000000000) < delta
+
+    ## Second
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.35, 75.90)
+
+    assert nomk1_str == 'S-47-003-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 97.50000000000000) < delta
+    assert abs(min_y1 - 75.83333333333334) < delta
+    assert abs(max_y1 - 76.00000000000000) < delta
+
+    # Test quad sheets 
+    ## First
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.20, 76.60)
+
+    assert nomk1_str == 'T-47-123-А,Б,124-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 98.00000000000000) < delta
+    assert abs(min_y1 - 76.50000000000000) < delta
+    assert abs(max_y1 - 76.66666666666667) < delta
+
+    ## Second
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.35, 76.60)
+
+    assert nomk1_str == 'T-47-123-А,Б,124-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 98.00000000000000) < delta
+    assert abs(min_y1 - 76.50000000000000) < delta
+    assert abs(max_y1 - 76.66666666666667) < delta
+
+    ## Third
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.55, 76.60)
+
+    assert nomk1_str == 'T-47-123-А,Б,124-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 98.00000000000000) < delta
+    assert abs(min_y1 - 76.50000000000000) < delta
+    assert abs(max_y1 - 76.66666666666667) < delta
+
+    ## Forth
+    nomk1_str, min_x1, max_x1, min_y1, max_y1 = coord.coords_to_50k(97.85, 76.60)
+
+    assert nomk1_str == 'T-47-123-А,Б,124-А,Б'
+    assert abs(min_x1 - 97.00000000000000) < delta
+    assert abs(max_x1 - 98.00000000000000) < delta
+    assert abs(min_y1 - 76.50000000000000) < delta
+    assert abs(max_y1 - 76.66666666666667) < delta
+
 def test_25k():
     is_south = False
     letter = 'N'

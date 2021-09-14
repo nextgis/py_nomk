@@ -202,7 +202,7 @@ def coords_to_100k_simple(x, y):
     abs_y = abs(y)
 
     col, row, min_x, min_y = get_1m(x, abs_y)
-    row_100k, col_100k, size_x, size_y, min_x, max_x, min_y, max_y = util.get_grid_pos(x, abs_y, min_x, min_y, 12, y < 0)
+    row_100k, col_100k, _, _, min_x, _, min_y, _ = util.get_grid_pos(x, abs_y, min_x, min_y, 12, y < 0)
     letter = util.letters[row]
     last_num = util.get_letter_num(col_100k, row_100k, y < 0)
     return letter, col, last_num, min_x, min_y * mult
@@ -215,7 +215,7 @@ def coords_to_50k_simple(x, y):
     abs_y = abs(y)
     
     letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
-    row_50k, col_50k, size_x_50k, size_y_50k, min_x_50k, max_x_50k, min_y_50k, max_y_50k = util.get_grid_pos(x, abs_y, min_x, min_y, 24, y < 0)
+    row_50k, col_50k, _, _, min_x_50k, _, min_y_50k, _ = util.get_grid_pos(x, abs_y, min_x, min_y, 24, y < 0)
 
     letter_str = util.get_letter_ru(col_50k, row_50k, y < 0)
     return letter, number, last_number, letter_str, min_x_50k, min_y_50k * mult
@@ -228,12 +228,12 @@ def coords_to_25k_simple(x, y):
     abs_y = abs(y)
 
     letter, number, last_number, last_letter, min_x, min_y = coords_to_50k_simple(x, y)
-    row_25k, col_25k, size_x_25k, size_y_25k, min_x_25k, max_x_25k, min_y_25k, max_y_25k = util.get_grid_pos(x, abs_y, min_x, min_y, 48, y < 0)
+    row_25k, col_25k, _, _, min_x_25k, max_x_25k, min_y_25k, _ = util.get_grid_pos(x, abs_y, min_x, min_y, 48, y < 0)
 
-    pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
+    # pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
 
-    min_x = min_x_25k
-    max_x = max_x_25k
+    # min_x = min_x_25k
+    # max_x = max_x_25k
 
     letter_str = util.get_letter_ru(col_25k, row_25k, y < 0).lower()
     return letter, number, last_number, last_letter, letter_str, min_x_25k, min_y_25k * mult
@@ -246,10 +246,10 @@ def coords_to_5k_simple(x, y):
     abs_y = abs(y)
     
     letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
-    row_5k, col_5k, size_x_5k, size_y_5k, min_x_5k, max_x_5k, min_y_5k, max_y_5k = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
+    row_5k, col_5k, _, _, min_x_5k, _, min_y_5k, _ = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
 
-    min_x = min_x_5k
-    max_x = max_x_5k
+    # min_x = min_x_5k
+    # max_x = max_x_5k
     
     letter_str = util.get_letter_num2(col_5k, row_5k, y < 0)
 
@@ -262,7 +262,7 @@ def coords_to_100k(x, y):
 
     abs_y = abs(y)
     col, row, min1_x, min1_y = get_1m(x, abs_y)
-    row_100k, col_100k, size_x, size_y, min_x, max_x, min_y, max_y = util.get_grid_pos(x, abs_y, min1_x, min1_y, 12, y < 0)
+    row_100k, col_100k, size_x, _, min_x, max_x, min_y, max_y = util.get_grid_pos(x, abs_y, min1_x, min1_y, 12, y < 0)
 
     letter_str = ''
 
@@ -303,8 +303,8 @@ def coords_to_50k(x, y):
 
     abs_y = abs(y)
     
-    letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
-    row_50k, col_50k, size_x_50k, size_y_50k, min_x_50k, max_x_50k, min_y_50k, max_y_50k = util.get_grid_pos(x, abs_y, min_x, min_y, 24, y < 0)
+    letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)    
+    row_50k, col_50k, size_x_50k, _, min_x_50k, max_x_50k, min_y_50k, max_y_50k = util.get_grid_pos(x, abs_y, min_x, min_y, 24, y < 0)
 
     col_str = ''
     min_x = min_x_50k
@@ -319,6 +319,8 @@ def coords_to_50k(x, y):
             min_x -= size_x_50k * 2
         else:
             col_str = '{:03d}-{},{:03d}-{}'.format(last_number, letter_str, last_number + 1, letter_str)
+        if col_50k % 2 != 0:
+            min_x -= size_x_50k
         max_x = min_x + size_x_50k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         letter_str = util.get_row_ru(row_50k, y < 0)
@@ -366,6 +368,8 @@ def coords_to_25k(x, y):
             last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+        if col_25k % 2 != 0:
+            min_x -= size_x_25k
         max_x = min_x + size_x_25k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         if col_25k % 2 != 0:
@@ -407,10 +411,12 @@ def coords_to_10k(x, y):
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
             min_x -= size_x_10k * 2
         else:
-
             last_letter1 = util.get_letter_ru(pos_x, pos_y, y < 1)
             last_letter2 = util.get_letter_ru(pos_x + 1, pos_y, y < 1)
             col_str = '{}-{},{}-{}'.format(last_letter1, letter_str, last_letter2, letter_str)
+        if col_10k % 2 != 0:
+            min_x -= size_x_10k
+
         max_x = min_x + size_x_10k * 4
     elif abs_y > 60.0 and abs_y <= 76.0: # Create double sheets
         if col_10k % 2 != 0:
@@ -436,7 +442,7 @@ def coords_to_5k(x, y):
     abs_y = abs(y)
     letter_str = ''
     letter, number, last_number, min_x, min_y = coords_to_100k_simple(x, y)
-    row_5k, col_5k, size_x_5k, size_y_5k, min_x_5k, max_x_5k, min_y_5k, max_y_5k = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
+    row_5k, col_5k, size_x_5k, _, min_x_5k, max_x_5k, min_y_5k, max_y_5k = util.get_grid_pos(x, abs_y, min_x, min_y, 192, y < 0)
 
     if abs_y > 88.0:
         raise Exception('Unsupported latitude ({:.6f}) for this scale'.format(y))
