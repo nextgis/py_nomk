@@ -74,7 +74,7 @@ def text_to_200k(letter, number, last_letter, is_south):
 def text_to_100k(letter, number, last_letter, is_south):
     col, row = util.get_pos_num(last_letter, is_south)
 
-    print('col, row: {}, {} [{}]'.format(col, row, last_letter))
+    # print('col, row: {}, {} [{}]'.format(col, row, last_letter))
 
     min_x = 6.0 * (number - 31)
     min_x += 0.5 * col
