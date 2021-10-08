@@ -349,7 +349,7 @@ def coords_to_25k(x, y):
 
 
     pos_x, pos_y = util.get_pos_ru(last_letter, y < 0)
-    print('col: {}, size: {}, min_x: {}, min_x_25k: {}'.format(col_25k, size_x_25k, min_x, min_x_25k))
+    # print('col: {}, size: {}, min_x: {}, min_x_25k: {}'.format(col_25k, size_x_25k, min_x, min_x_25k))
 
     col_str = ''
     min_x = min_x_25k
