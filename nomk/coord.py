@@ -5,7 +5,7 @@
 # Author:  Dmitry Baryshnikov, dmitry.baryshnikov@nextgis.ru
 # Version: 0.1
 ################################################################################
-# Copyright (C) 2020-2021, NextGIS <info@nextgis.com>
+# Copyright (C) 2020-2022, NextGIS <info@nextgis.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -60,9 +60,9 @@ def coords_to_1m(x, y, alternative = False):
 
         for i in range(4):
             if col_str == '':
-                col_str = '{}'.format(col + 1 + i)
+                col_str = '{:02d}'.format(col + 1 + i)
             else: 
-                col_str = col_str + ',{}'.format(col + 1 + i)
+                col_str = col_str + ',{:02d}'.format(col + 1 + i)
             max_x = max_x + 6.0
 
     elif abs_y < 76.0 and abs_y > 60.0: # Create double sheets    
@@ -74,15 +74,15 @@ def coords_to_1m(x, y, alternative = False):
 
         for i in range(2):
             if col_str == '':
-                col_str = '{}'.format(col + 1 + i)
+                col_str = '{:02d}'.format(col + 1 + i)
             else: 
-                col_str = col_str + ',{}'.format(col + 1 + i)
+                col_str = col_str + ',{:02d}'.format(col + 1 + i)
             max_x = max_x + 6.0
 
     else:
         col = int(math.floor(x / 6.0))
         min_x = col * 6.0
-        col_str = '{}'.format(col + 31)
+        col_str = '{:02d}'.format(col + 31)
         max_x = min_x + 6.0
 
     nomk_str = '{}-{}'.format(util.letters[row], col_str)
@@ -110,10 +110,10 @@ def coords_to_500k(x, y):
             letter = util.get_row_ru(0, y < 0)
 
         if col % 2 == 0:
-            col_str = '{}-{},{}-{}'.format(col - 1, letter, col, letter)
+            col_str = '{:02d}-{},{:02d}-{}'.format(col - 1, letter, col, letter)
             min_x -= 6
         else:
-            col_str = '{}-{},{}-{}'.format(col, letter, col + 1, letter)
+            col_str = '{:02d}-{},{:02d}-{}'.format(col, letter, col + 1, letter)
         max_x = min_x + 12.0
         
     elif abs_y < 76.0 and abs_y > 60.0: # Create double sheets    
@@ -123,7 +123,7 @@ def coords_to_500k(x, y):
         else: 
             letter = util.get_row_ru(0, y < 0)
         max_x = min_x + 6.0
-        col_str = '{}-{}'.format(col, letter)
+        col_str = '{:02d}-{}'.format(col, letter)
     else:
         local_col = int(math.floor(abs(x - min_x) / 3.0))
         local_row = int(math.floor((abs_y - min_y) / 2.0))
@@ -134,7 +134,7 @@ def coords_to_500k(x, y):
 
         max_x = min_x + 3.0
 
-        col_str = '{}-{}'.format(col, letter)
+        col_str = '{:02d}-{}'.format(col, letter)
 
     max_y = min_y + 2.0
 
@@ -189,7 +189,7 @@ def coords_to_200k(x, y):
     min_y = min_y + row_200k * size_y
     max_y = min_y + size_y
 
-    nomk_str = '{}-{}-{}'.format(util.letters[row], col, letter)
+    nomk_str = '{}-{:02d}-{}'.format(util.letters[row], col, letter)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -291,7 +291,7 @@ def coords_to_100k(x, y):
     else:
         letter_str = '{:03d}'.format(util.get_letter_num(col_100k, row_100k, y < 0))
 
-    nomk_str = '{}-{}-{}'.format(util.letters[row], col, letter_str)
+    nomk_str = '{}-{:02d}-{}'.format(util.letters[row], col, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y * mult, max_y * mult
@@ -332,7 +332,7 @@ def coords_to_50k(x, y):
         letter_str = util.get_letter_ru(col_50k, row_50k, y < 0)
         col_str = '{:03d}-{}'.format(last_number, letter_str)
 
-    nomk_str = '{}-{}-{}'.format(letter, number, col_str)
+    nomk_str = '{}-{:02d}-{}'.format(letter, number, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_50k * mult, max_y_50k * mult
@@ -381,7 +381,7 @@ def coords_to_25k(x, y):
         letter_str = util.get_letter_ru(col_25k, row_25k, y < 0).lower()
         col_str = '{}-{}'.format(last_letter, letter_str)
 
-    nomk_str = '{}-{}-{:03d}-{}'.format(letter, number, last_number, col_str)
+    nomk_str = '{}-{:02d}-{:03d}-{}'.format(letter, number, last_number, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_25k * mult, max_y_25k * mult
@@ -428,7 +428,7 @@ def coords_to_10k(x, y):
         letter_str = util.get_letter_num_simple(col_10k, row_10k, y < 0)
         col_str = '{}-{}'.format(last_letter, letter_str)
 
-    nomk_str = '{}-{}-{:03d}-{}-{}'.format(letter, number, last_number, letter2, col_str)
+    nomk_str = '{}-{:02d}-{:03d}-{}-{}'.format(letter, number, last_number, letter2, col_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_10k * mult, max_y_10k * mult
@@ -473,7 +473,7 @@ def coords_to_5k(x, y):
         min_x = min_x_5k
         max_x = max_x_5k
 
-    nomk_str = '{}-{}-{:03d}-{}'.format(letter, number, last_number, letter_str)
+    nomk_str = '{}-{:02d}-{:03d}-{}'.format(letter, number, last_number, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_5k * mult, max_y_5k * mult
@@ -502,7 +502,7 @@ def coords_to_2k(x, y):
         min_x = min_x_2k
         max_x = max_x_2k
 
-    nomk_str = '{}-{}-{:03d}-({:03d})-{}'.format(letter, number, last_number, last_letter, letter_str)
+    nomk_str = '{}-{:02d}-{:03d}-({:03d})-{}'.format(letter, number, last_number, last_letter, letter_str)
     if y < 0:
         nomk_str += util.south_suffix()
     return nomk_str, min_x, max_x, min_y_2k * mult, max_y_2k * mult
